@@ -236,13 +236,16 @@ typedef struct {
 	int				bubble;				// non zero means no flashblend bubble
 	dlighttype_t	type;
 #ifdef GLQUAKE
-	byte			color[3];			// use such color if type == lt_custom
+	byte			color[4];			// use such color if type == lt_custom
 #endif
 } dlight_t;
 
+
+
+
 typedef struct customlight_s {
 	dlighttype_t	type;
-	byte			color[3];			// use such color if type == lt_custom
+	byte			color[4];			// use such color if type == lt_custom
 } customlight_t;
 
 typedef struct {

@@ -120,9 +120,9 @@ void R_RenderDlight (dlight_t *light) {
 
 	glBegin (GL_TRIANGLE_FAN);
 	if (light->type == lt_custom)
-		glColor3ubv (light->color);
+		glColor4ubv (light->color);
 	else
-		glColor3fv (bubblecolor[light->type]);
+		glColor4fv (bubblecolor[light->type]);
 
 	VectorVectors(v, v_right, v_up);
 

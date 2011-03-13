@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifdef GLQUAKE
 #include "gl_model.h"
 #include "gl_local.h"
+#include "gl_flare.h"
 #else
 #include "r_model.h"
 #include "r_local.h"
@@ -1117,6 +1118,10 @@ void CL_LinkPacketEntities(void)
 #endif
 			if (model->flags & EF_ROCKET)
 			{
+				#ifdef GLQUAKE
+				R_Flare (*old_origin, ent.origin, 0);
+				#endif
+
 				if (r_rockettrail.value) 
 				{
 					missile_trail(r_rockettrail.integer, model, old_origin, &ent, cent);

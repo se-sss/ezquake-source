@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "hud.h"
 #include "hud_common.h"
 #include "gl_bloom.h"
+#include "gl_flare.h"
 #include "rulesets.h"
 #include "teamplay.h"
 
@@ -205,6 +206,9 @@ cvar_t	gl_simpleitems_orientation = {"gl_simpleitems_orientation", "2"};
 
 cvar_t gl_gammacorrection = {"gl_gammacorrection", "0", CVAR_LATCH};
 cvar_t	gl_modulate = {"gl_modulate", "1"};
+
+cvar_t	gl_flares = {"gl_flares","0"}; // -=MD=-
+
 
 int		lightmode = 2;
 
@@ -1913,6 +1917,10 @@ void R_Init (void) {
 	Cvar_Register (&gl_loadlitfiles);
 	Cvar_Register (&gl_colorlights);
 
+
+	Cvar_Register (&gl_flares);
+
+
 	Cvar_SetCurrentGroup(CVAR_GROUP_TEXTURES);
 	Cvar_Register (&gl_playermip);
 	Cvar_Register (&gl_subdivide_size);
@@ -2226,6 +2234,10 @@ void R_RenderView (void) {
 	R_RenderScene ();
 	R_RenderDlights ();
 	R_DrawParticles ();
+
+	if (gl_flares.value)
+		R_RenderFlares ();
+
 
 	DrawCI ();
 

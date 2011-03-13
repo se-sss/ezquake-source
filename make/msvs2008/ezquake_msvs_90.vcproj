@@ -1303,6 +1303,10 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\gl_flare.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\gl_md3.c"
 					>
 					<FileConfiguration
@@ -4608,6 +4612,10 @@
 				</File>
 				<File
 					RelativePath="..\..\gl_bloom.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\gl_flare.h"
 					>
 				</File>
 				<File
