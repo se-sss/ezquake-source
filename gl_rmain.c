@@ -207,9 +207,6 @@ cvar_t	gl_simpleitems_orientation = {"gl_simpleitems_orientation", "2"};
 cvar_t gl_gammacorrection = {"gl_gammacorrection", "0", CVAR_LATCH};
 cvar_t	gl_modulate = {"gl_modulate", "1"};
 
-cvar_t	gl_flares = {"gl_flares","0"}; // -=MD=-
-
-
 int		lightmode = 2;
 
 //static int deathframes[] = { 49, 60, 69, 77, 84, 93, 102, 0 };
@@ -1917,11 +1914,7 @@ void R_Init (void) {
 	Cvar_Register (&gl_loadlitfiles);
 	Cvar_Register (&gl_colorlights);
 
-
-	Cvar_Register (&gl_flares);
-
-
-	Cvar_SetCurrentGroup(CVAR_GROUP_TEXTURES);
+	init_flare_vars();	Cvar_SetCurrentGroup(CVAR_GROUP_TEXTURES);
 	Cvar_Register (&gl_playermip);
 	Cvar_Register (&gl_subdivide_size);
 	Cvar_Register (&gl_lumaTextures);

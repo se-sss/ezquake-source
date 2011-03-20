@@ -3,23 +3,9 @@
 
 #define MAX_FLARES 128
 
-/*
-typedef struct
-{
-	int		key;				// so entities can reuse same entry
-	vec3_t	origin;
-	float	radius;
-	float	die;				// stop lighting after this time
-	float	decay;				// drop this each second
-	float	minlight;			// don't add when contributing less
-	int		type;				// Tonik
-	float	color[4];
-} flare;
-*/
-
-//typedef dlight_t flare;
 
 extern	cvar_t	gl_flares; // -=MD=-
+void init_flare_vars();
 
 void	ClearFlares(void);
 dlight_t	*CL_AllocFlare (int key);
