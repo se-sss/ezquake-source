@@ -29,10 +29,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "quakedef.h"
 #include "qsound.h"
 
-static const int rates[] = { 11025, 22050, 44100, 8000 };
-
-#define NUMRATES (sizeof(rates)/sizeof(*rates))
-
 extern cvar_t s_oss_device;
 
 struct oss_private
@@ -52,10 +48,6 @@ static int oss_getdmapos(void)
 		shm->samplepos = 0;
 
 	return shm->samplepos;
-}
-
-static void oss_submit(unsigned int count)
-{
 }
 
 static void oss_shutdown(void)
@@ -100,55 +92,50 @@ static qbool oss_init_internal(qsoundhandler_t *sd, const char *device, int rate
 					if (shm->format.width)
 					{
 						i = 0;
-						do
-						{
-							if (ioctl(p->fd, SNDCTL_DSP_SPEED, &rate) == 0)
-								break;
+						if (ioctl(p->fd, SNDCTL_DSP_SPEED, &rate) < 0) {
+							Com_Printf("[sound] oss error: tried %d Hz but failed.\n", rate);
+							return false;
+						}
 
-							rate = rates[i];
-						} while(i++ != NUMRATES);
-
-						if (i != NUMRATES+1)
+						if (channels == 1)
 						{
-							if (channels == 1)
-							{
-								shm->format.channels = 1;
-								i = 0;
-							}
+							shm->format.channels = 1;
+							i = 0;
+						}
+						else
+						{
+							shm->format.channels = 2;
+							i = 1;
+						}
+
+						if (ioctl(p->fd, SNDCTL_DSP_STEREO, &i) >= 0)
+						{
+							if (shm->format.width == 2)
+								i = AFMT_S16_LE;
 							else
-							{
-								shm->format.channels = 2;
-								i = 1;
-							}
+								i = AFMT_S8;
 
-							if (ioctl(p->fd, SNDCTL_DSP_STEREO, &i) >= 0)
+							if (ioctl(p->fd, SNDCTL_DSP_SETFMT, &i) >= 0)
 							{
-								if (shm->format.width == 2)
-									i = AFMT_S16_LE;
-								else
-									i = AFMT_S8;
-
-								if (ioctl(p->fd, SNDCTL_DSP_SETFMT, &i) >= 0)
+								i = 0;
+								if (ioctl(p->fd, SNDCTL_DSP_SETTRIGGER, &i) >= 0)
 								{
-									i = 0;
+									i = PCM_ENABLE_OUTPUT;
 									if (ioctl(p->fd, SNDCTL_DSP_SETTRIGGER, &i) >= 0)
 									{
-										i = PCM_ENABLE_OUTPUT;
-										if (ioctl(p->fd, SNDCTL_DSP_SETTRIGGER, &i) >= 0)
-										{
-											shm->samples = info.fragstotal * info.fragsize / (shm->format.width);
-											shm->samplepos = 0;
-											shm->format.speed = rate;
+										shm->samples = info.fragstotal * info.fragsize / (shm->format.width);
+										shm->samplepos = 0;
+										shm->format.speed = rate;
 
-											pdriver = p;
+										pdriver = p;
 
-											sd->GetDMAPos = oss_getdmapos;
-											sd->GetAvail = NULL;
-											sd->Submit = oss_submit;
-											sd->Shutdown = oss_shutdown;
+										sd->GetDMAPos = oss_getdmapos;
+										sd->GetAvail = NULL;
+										sd->Submit = NULL;
+										sd->Shutdown = oss_shutdown;
+										sd->name = "snd_oss";
 
-											return 1;
-										}
+										return 1;
 									}
 								}
 							}
