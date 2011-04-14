@@ -156,6 +156,8 @@ cvar_t cl_voip_showmeter_y = {"cl_voip_showmeter_y", "0"};
 cvar_t cl_voip_play = {"cl_voip_play", "1", CVAR_NONE, S_Voip_Play_Callback};
 // Amplifies your microphone when using voip.
 cvar_t cl_voip_micamp = {"cl_voip_micamp", "2"};
+// Record VOIP in demo.
+cvar_t cl_voip_demorecord = {"cl_voip_demorecord", "1"};
 #endif
 
 static void S_SoundInfo_f (void)
@@ -171,7 +173,7 @@ static void S_SoundInfo_f (void)
 	Com_Printf("%5d speakers\n", shm->format.channels);
 #if defined(__linux__) || defined(__FreeBSD__)
 	// shm->sampleframes not set/used in ALSA/Pulseaudio
-	// OSS still sets it, but it isn't used outside of OSS.
+	// OSS(legacy) still sets it, but it isn't used outside of OSS(legacy).
 	// So don't read sampleframes from shm, but calculate it instead.
 	Com_Printf("%5d frames\n", shm->samples / shm->format.channels); 
 #else
@@ -320,6 +322,7 @@ static void S_Register_RegularCvarsAndCommands(void)
 	Cvar_Register(&cl_voip_showmeter_y);
 	Cvar_Register(&cl_voip_play);
 	Cvar_Register(&cl_voip_micamp);
+	Cvar_Register(&cl_voip_demorecord);
 
 	Cmd_AddCommand("+voip", S_Voip_Enable_f);
 	Cmd_AddCommand("-voip", S_Voip_Disable_f);

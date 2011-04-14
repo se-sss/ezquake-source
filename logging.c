@@ -218,7 +218,7 @@ qbool Log_TempLogUploadPending(void) {
 static qbool Log_IsUploadAllowed(void) {
 	return match_auto_logupload.integer
 		&& match_auto_logconsole.integer
-		&& cls.demoplayback == DT_NONE
+		&& !cls.demoplayback
 		&& cls.server_adr.type != NA_LOOPBACK;
 }
 
@@ -408,7 +408,7 @@ DWORD WINAPI Log_AutoLogging_Upload_Thread(void *vjob)
 		Com_Printf("%s\n", errorbuffer);
 	}
 	else {
-		Com_Printf("Match log uplaoded\n");
+		Com_Printf("Match log uploaded\n");
 	}
 
 	Log_Upload_Job_Free(job);
